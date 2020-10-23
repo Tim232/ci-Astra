@@ -15,7 +15,6 @@ from .logging import LoggingHandler
 class AstraBot(commands.Bot):
     def __init__(self, *args, **kwargs):
         self.cog_groups = {}
-        print("[BOT] Initializing bot")
         super(AstraBot, self).__init__(*args, **kwargs)
 
         self.TRACE = 7
@@ -44,6 +43,7 @@ class AstraBot(commands.Bot):
         TypeError
             An unexpected keyword argument was received.
         """
+        self.logger.info("bot:Loading")
         bot = kwargs.pop('bot', True)
         reconnect = kwargs.pop('reconnect', True)
         if kwargs:
@@ -59,15 +59,15 @@ class AstraBot(commands.Bot):
                 self.logger.warning(f"bot:  {e}")
                 self.logger.warning(f"bot: waiting {2 ** (i + 1)} seconds")
                 await asyncio.sleep(2 ** (i + 1))
-                self.logger.info("bot:attempting to reconnect")
+                self.logger.info("bot:Attempting to reconnect")
         else:
-            self.logger.critical("bot: failed after 6 attempts")
+            self.logger.critical("bot:Failed after 6 attempts")
             return
 
         for cog in self.cogs:
             cog = self.get_cog(cog)
             if not cog.description and cog.qualified_name not in self.cog_groups["Hidden"]:
-                self.logger.critical(f"bot:cog {cog.qualified_name} has no description")
+                self.logger.critical(f"bot:Cog {cog.qualified_name} has no description")
                 return
 
         missing_brief = []
@@ -76,12 +76,10 @@ class AstraBot(commands.Bot):
                 missing_brief.append(command)
 
         if missing_brief:
-            self.logger.error("bot:the following commands are missing help text")
+            self.logger.error("bot:The following commands are missing help text")
             for i in missing_brief:
                 self.logger.error(f"bot: - {i.cog.qualified_name}.{i.name}")
             return
-
-        await self.connect(reconnect=reconnect)
 
         await self.connect(reconnect=reconnect)
 

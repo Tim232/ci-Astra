@@ -1,2 +1,6 @@
 "Astra":
   "cogs.help": "Help"
+"Documentation":
+  "cogs.documentation.python": "Python"
+"Hidden":
+  "cogs.errorhandler": "ErrorHandler"
